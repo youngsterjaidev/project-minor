@@ -1,17 +1,57 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { config } from "dotenv";
+import { useState } from "react";
+import { render } from "react-dom";
+import { Router } from "@reach/router";
+import { darkTheme, defaultTheme } from "./utils";
+import { ThemeProvider } from "styled-components";
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
+import useToken from "./useToken";
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+import App from "./App";
+import { SignUp, Result, Dashboard, Shop } from "./pages";
+import UserContext from "./UserContext";
+
+config();
+
+const Main = () => {
+    const [useDarkTheme, setUseDarkTheme] = useState(false);
+    const [token, setToken] = useToken();
+
+    return (
+        <ThemeProvider theme={useDarkTheme ? darkTheme : defaultTheme}>
+            <UserContext.Provider value={token}>
+                <Router>
+                    <App
+                        useDarkTheme={useDarkTheme}
+                        setUseDarkTheme={setUseDarkTheme}
+                        setToken={setToken}
+                        path="/"
+                    />
+                    <SignUp
+                        useDarkTheme={useDarkTheme}
+                        setUseDarkTheme={setUseDarkTheme}
+                        path="/join"
+                    />
+                    <Dashboard
+                        useDarkTheme={useDarkTheme}
+                        setUseDarkTheme={setUseDarkTheme}
+                        path="/dashboard"
+                    />
+                    <Result
+                        useDarkTheme={useDarkTheme}
+                        setUseDarkTheme={setUseDarkTheme}
+                        path="/result/:search"
+                    />
+                    <Shop
+                        useDarkTheme={useDarkTheme}
+                        setUseDarkTheme={setUseDarkTheme}
+                        path="result/shop/:shop"
+                    />
+                </Router>
+            </UserContext.Provider>
+        </ThemeProvider>
+    );
+};
+
+const rootElement = document.getElementById("root");
+render(<Main />, rootElement);
