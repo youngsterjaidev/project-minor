@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { WiMoonAltFirstQuarter } from "react-icons/wi";
-import { AiOutlineUser } from "react-icons/ai";
+import { AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
 import { typeScale } from "../utils";
-import { Link } from "@reach/router";
+import { Link, navigate } from "@reach/router";
 
 import { IoIosArrowBack } from "react-icons/io";
 
@@ -106,6 +106,29 @@ const NavTab = styled(Link)`
     }
 `;
 
+const LogoutTab = styled.div`
+		font-style: normal;
+    padding: 0.2em 1.5em;
+    font-weight: bold;
+    font-size: ${() => typeScale.paragraph};
+    line-height: 28px;
+    color: ${(props) => props.theme.textColor};
+    cursor: pointer;
+    display: flex;
+    place-items: center;
+
+    &:hover {
+        background-color: ${(props) => props.theme.primaryColor};
+        color: ${(props) => props.theme.textColorOnPrimary};
+        border-radius: 3em;
+        box-shadow: 0px 0px 44px 0px ${(props) => props.theme.boxShadow};
+    }
+
+    @media (max-width: 550px) {
+        display: none;
+    }
+`
+
 const Hamburger = styled.div`
     display: none;
 
@@ -134,12 +157,19 @@ export const Nav: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
         setShadow(true);
     }
 
+		function logout() {
+			console.info("logout")
+			localStorage.clear()
+			navigate("/")
+		}
+
     useEffect(() => {
         window.addEventListener("scroll", handleScroll);
 
         return () => window.addEventListener("scroll", handleScroll);
     }, []);
-return (
+
+		return (
         <Container shadow={shadow}>
             <LogoTabs
                 to=""
@@ -168,6 +198,11 @@ return (
                 <NavTab to="">
                     <AiOutlineUser size="1.8em" />
                 </NavTab>
+								<LogoutTab
+									onClick={logout}
+								>
+                    <AiOutlineLogout size="1.8em" />
+                </LogoutTab>
                 <Hamburger>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

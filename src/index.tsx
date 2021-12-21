@@ -11,7 +11,10 @@ import App from "./App";
 import { SignUp, Result, Dashboard, Shop } from "./pages";
 import UserContext from "./UserContext";
 
+// add the dotenv config
 config();
+
+console.log(process.env.REACT_APP_BASE_URL)
 
 const Main = () => {
     const [useDarkTheme, setUseDarkTheme] = useState(false);

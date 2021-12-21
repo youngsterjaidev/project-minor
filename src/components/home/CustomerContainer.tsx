@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { Illustrations } from "../../assets";
+import axios from "axios"
 import { typeScale } from "../../utils";
+import {UnknownProps} from "@react-spring/web";
 
 const Container = styled.div`
   width: 100%;
@@ -74,13 +76,20 @@ const Rating = styled.div`
   position: absolute;
   top: 1em;
   right: 1em;
+  color: ${(props) => props.theme.textColor};
+	display: flex;
+	place-items: center;
+
+	& > svg {
+    fill: ${(props) => props.theme.textColor};
+    cursor: pointer;
+		width: 25px;
+		height: 25px;
+  }
 `;
 
 const CardImage = styled.div`
-  & > svg {
-    fill: ${(props) => props.theme.textColor};
-    cursor: pointer;
-  }
+
 `;
 
 const Image = styled.img`
@@ -99,23 +108,68 @@ const CardBody = styled.div`
   }
 `;
 
+const dummyData: CustomerData[] = [
+	{
+		image: Illustrations.Dog,
+		content: "If you don't appreciate your customers, someone else will. A customer talking about their experience with you is worth ten times that which you write or say about yourself.",
+		rating: 2,
+	},
+	{
+		image: Illustrations.Dog,
+		content: "If you don't appreciate your customers, someone else will. A customer talking about their experience with you is worth ten times that which you write or say about yourself.",
+		rating: 2,
+	}
+]
+
+interface CustomerData {
+	image: string,
+	content: string,
+	rating: number
+}
+
+
 export const CustomerContainer = () => {
+	const [data, setData] = useState<CustomerData[]| any>(dummyData)
+
+	// fetch the customer review data
+	const fetchReviews = async () => {
+		try {
+			let res  = await axios({
+				url: "",
+				method: "GET",
+				headers: {
+					"x-auth-key": "something"
+				}
+			})
+
+			if(res.status === 200) {
+				setData(res.data)
+			}
+
+			console.log("Failed to fetch the reviews")
+		} catch(e) {
+			console.error("Error Occured while fetching the review data from the server", e)
+		}
+	}
+
+	useEffect(() => {
+		//fetchReviews()
+	}, [])
+
   return (
     <Container>
       <ContainerWrapper>
         <Heading>Customer Review </Heading>
         <SubHeading>What Customer Say About Us</SubHeading>
         <Wrapper>
-          <Card>
+					{data.map((item) => (
+						<Card key={item.id}>
             <CardImage>
-              <Image src={Illustrations.Dog} alt="" />
+              <Image src={item.image} alt="" />
             </CardImage>
-            <CardBody>
-              “If you don't appreciate your customers, someone else will.” “A
-              customer talking about their experience with you is worth ten
-              times that which you write or say about yourself.”
-            </CardBody>
+            <CardBody>{item.content}</CardBody>
             <Rating>
+							<div>{item.rating}</div>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-5 w-5"
@@ -129,15 +183,7 @@ export const CustomerContainer = () => {
               </svg>
             </Rating>
           </Card>
-          <Card>
-            <CardImage>
-              <Image src={Illustrations.Dog} alt="" />
-            </CardImage>
-            <CardBody>
-              “Capitalize on charm by continually captivating your customer.”
-              “Customers loves certainty, make sure you give it to them.”
-            </CardBody>
-          </Card>
+					))}
         </Wrapper>
       </ContainerWrapper>
     </Container>

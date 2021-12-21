@@ -1,0 +1,187 @@
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { typeScale } from "../utils";
+import { Link } from "@reach/router";
+import { Illustrations } from "../assets";
+
+import axios from "axios";
+
+import { AiFillHeart } from "react-icons/ai";
+
+import { Nav, Load, Footer } from "../components";
+
+interface Props {
+    path?: string;
+    search?: string;
+    useDarkTheme: any;
+    setUseDarkTheme: any;
+}
+
+const Container = styled.div`
+    background-color: ${(props) => props.theme.backgroundColor};
+`;
+
+const Heading = styled.h1`
+    text-align: center;
+    font-weight: 100;
+    color: lightgrey;
+`;
+
+const SubHeading = styled.h2`
+    text-align: center;
+    font-weight: 100;
+    color: lightgrey;
+`;
+
+const Wrapper = styled.div`
+    padding: 1em;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+`;
+
+const Card = styled(Link)`
+    text-decoration: none;
+    display: block;
+    height: auto;
+    background-color: white;
+    border-radius: 8px;
+    padding: 1em;
+    display: block;
+    margin: 1em 2em;
+    place-items: center;
+    box-shadow: none;
+    background-color: ${(props) => props.theme.backgroundColor};
+    transition: box-shadow 0.3s linear;
+
+    &:hover {
+        box-shadow: 0px 0px 43px 1px ${(props) => props.theme.boxShadow};
+    }
+`;
+
+const CardImage = styled.div``;
+
+const Image = styled.img``;
+
+const CardBody = styled.div`
+    position: relative;
+    padding: 1em 0em;
+`;
+
+const Rating = styled.div`
+    position: absolute;
+    top: 0.5em;
+    right: 0.5em;
+    display: inline-flex;
+    place-items: center;
+    color: ${(props) => props.theme.textColor};
+`;
+
+const Shop = styled.div`
+    color: ${(props) => props.theme.textColor};
+`;
+
+const Timing = styled.div`
+    color: ${(props) => props.theme.textColor};
+`;
+
+const Heart = styled(AiFillHeart)`
+    color: ${(props) => props.theme.textColor};
+    margin: 0em 0.5em;
+`;
+
+// dummy Data
+const dummyData = [
+    {
+        _id: 1,
+        shopName: "Pets Care",
+        image: "anything",
+        timing: "3:50AM - 10:50PM",
+        rating: 4,
+    },
+    {
+        _id: 2,
+        shopName: "Animal Love",
+        image: "kuch bhii",
+        timing: "3:50AM - 10:50PM",
+        rating: 3,
+    },
+    {
+        _id: 1,
+        shopName: "Pets Care",
+        image: "anything",
+        timing: "3:50AM - 10:50PM",
+        rating: 4,
+    },
+    {
+        _id: 2,
+        shopName: "Animal Love",
+        image: "kuch bhii",
+        timing: "3:50AM - 10:50PM",
+        rating: 3,
+    },
+];
+
+export const Result: React.FC<Props> = (props) => {
+    const [result, setResult] = useState<any[]>([]);
+
+    async function fetchInfo(item) {
+        try {
+            /*let res = await axios({
+                url: "http://localhost:8000/",
+                method: "GET",
+                params: {
+                    searchString: item
+                },
+            })
+            if(res?.status === 200) {
+                setResult(res.data)
+            }*/
+            setTimeout(() => {
+                setResult(dummyData);
+            }, 1000);
+        } catch (e) {
+            console.error("Error Occured while fetching the info : ", e);
+        }
+    }
+
+    useEffect(() => {
+        // ...
+        console.log(props);
+        // @ts-ignore
+        fetchInfo(props?.search);
+    }, []);
+
+    return (
+        <>
+            {result.length === 0 ? (
+                <Load />
+            ) : (
+                <Container>
+                    <Nav useDarkTheme={props.useDarkTheme} setUseDarkTheme={props.setUseDarkTheme} />
+                    <Heading>{props.search}</Heading>
+                    <SubHeading>Here's result!</SubHeading>
+                    <Wrapper>
+                        {result.map((item) => {
+                            return (
+                                <Card to="/result/shop/petCare">
+                                    <CardImage>
+                                        <Image src={Illustrations.Dog} alt="" />
+                                    </CardImage>
+                                    <CardBody>
+                                        <Shop>{item.shopName}</Shop>
+                                        <Timing>{item.timing}</Timing>
+                                        <Rating>
+                                            <div>{item.rating}</div>
+                                            <Heart size="1.5em" />
+                                        </Rating>
+                                    </CardBody>
+                                </Card>
+                            );
+                        })}
+                    </Wrapper>
+                    <Footer />
+                </Container>
+            )}
+        </>
+    );
+};

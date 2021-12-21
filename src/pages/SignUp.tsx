@@ -1,14 +1,15 @@
 import React, { FC } from "react";
-import styled from "styled-components";
-import { Link } from "@reach/router";
+import styled, { ThemeConsumer } from "styled-components";
+import { Link, navigate } from "@reach/router";
 import { Input, Button } from "../components";
 import { Illustrations } from "../assets";
 import { typeScale } from "../utils";
+import axios from "axios";
 
 interface Props {
   path: string;
-    useDarkTheme: any;
-    setUseDarkTheme: any;
+  useDarkTheme: any;
+  setUseDarkTheme: any;
 }
 
 const Container = styled.div`
@@ -88,39 +89,105 @@ const Image = styled.img`
   width: 100%;
 `;
 
-export const SignUp: FC<Props> = () => {
-  return (
-    <Container>
-      <ImageContainer>
-        <Image src={Illustrations.Bird} alt="" />
-      </ImageContainer>
-      <FormContainer>
-        <div>
-          <Heading>Join us</Heading>
-          <SubHeading>Create An Account !</SubHeading>
-          <Form>
+export class SignUp extends React.Component<Props> {
+
+  state = {
+    username: "",
+    email: "",
+    phone: "",
+    password: "",
+    confirmPassword: ""
+  }
+
+  handleChange = (e) => {
+    let target = e.target
+    this.setState({ [target.name]: target.value })
+  }
+
+  handleSubmit = async (e) => {
+    // prevent from page loading
+    e.preventDefault()
+
+    try {
+      let res = await axios({
+        method: "POST",
+        url: `${process.env.REACT_APP_SERVER_URI}/users/add`,
+        data: this.state
+      })
+
+      if (res.status === 200) {
+        console.log(res.data)
+				navigate("/dashboard")
+      }
+
+      console.log("Something went wrong !")
+    } catch (e) {
+      console.error("Error Occured while adding the user", e)
+    }
+  }
+
+  render() {
+    return (
+      <Container>
+        <ImageContainer>
+          <Image src={Illustrations.Bird} alt="" />
+        </ImageContainer>
+        <FormContainer>
+          <div>
+            <Heading>Join us</Heading>
+            <SubHeading>Create An Account !</SubHeading>
+            <Form>
+              <FormGroup>
+                <MyInput
+                  placeholder="username"
+                  name="username"
+                  value={this.state.username}
+                  type="text"
+                  onChange={this.handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <MyInput
+                  placeholder="email"
+                  name="email"
+                  value={this.state.email}
+                  type="text"
+                  onChange={this.handleChange}
+                />
+              </FormGroup>
+              <FormGroup>
+                <MyInput
+                  onChange={this.handleChange}
+                  placeholder="phone"
+                  name="phone"
+                  value={this.state.phone}
+                  type="text" />
+              </FormGroup>
+              <FormGroup>
+                <MyInput
+                  onChange={this.handleChange}
+                  placeholder="password"
+                  name="password"
+                  value={this.state.password}
+                  type="text"
+                />
+              </FormGroup>
+              <FormGroup>
+                <MyInput
+                  onChange={this.handleChange}
+                  placeholder="confirmPassword"
+                  value={this.state.confirmPassword}
+                  type="text"
+                />
+              </FormGroup>
+            </Form>
             <FormGroup>
-              <MyInput placeholder="username" value="" type="text" />
+              <MyButton>Create An Account !</MyButton>
+              <MyLink to="/">Home</MyLink>
             </FormGroup>
-            <FormGroup>
-              <MyInput placeholder="email" value="" type="text" />
-            </FormGroup>
-            <FormGroup>
-              <MyInput placeholder="phone" value="" type="text" />
-            </FormGroup>
-            <FormGroup>
-              <MyInput placeholder="password" value="" type="text" />
-            </FormGroup>
-            <FormGroup>
-              <MyInput placeholder="Confirm password" value="" type="text" />
-            </FormGroup>
-          </Form>
-          <FormGroup>
-            <MyButton>Create An Account !</MyButton>
-            <MyLink to="/">Home</MyLink>
-          </FormGroup>
-        </div>
-      </FormContainer>
-    </Container>
-  );
+          </div>
+        </FormContainer>
+      </Container>
+    );
+  }
 };

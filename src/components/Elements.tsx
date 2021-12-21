@@ -7,12 +7,12 @@ export const Input = styled.input`
   background: ${(props) => props.theme.backgroundColor};
   color: ${(props) => props.theme.textColor};
   border-radius: 30px;
-  border: 1px solid ${(props) => props.theme.textColor};
+  border: 2px solid ${(props) => props.theme.textColor};
 
   &:focus {
     outline: 2px solid ${(props) => props.theme.outline};
-    outline-offset: 0.5px;
-    border: 1px solid transparent;
+    outline-offset: 0px;
+    border: 2px solid transparent;
   }
 `;
 
@@ -25,7 +25,6 @@ export const Button = styled.button`
   border: none;
   box-shadow: 0px 0px 19px 0px ${(props) => props.theme.boxShadow};
   background: ${(props) => {
-    console.log(props.theme);
     return props.theme.primaryColor;
   }};
   color: ${(props) => props.theme.textColorOnPrimary};

@@ -1,7 +1,7 @@
 import React, { useState, useRef, useContext } from "react";
 import styled from "styled-components";
 import axios from "axios"
-import { Link } from "@reach/router"
+import { Link, navigate } from "@reach/router"
 import { typeScale } from "./utils";
 
 import {
@@ -43,6 +43,7 @@ const Container = styled.div`
 
 const Heading = styled.h4`
     text-align: center;
+    margin-bottom: 0.4em;
     font-size: ${typeScale.header4};
     color: ${(props) => props.theme.textColor};
 `;
@@ -65,6 +66,10 @@ const MyInput = styled(Input)`
     min-width: auto;
     display: block;
     background-color: ${(props) => props.theme.backgroundColor};
+
+    &:focus {
+        outline: none;
+    }
 `;
 
 const MyButton = styled(Button)`
@@ -92,12 +97,18 @@ const MyTab = styled(Link)`
 
 `;
 
+const Feedback = styled.div`
+  text-align: center;
+  color: #ff0000;
+`
+
 export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) {
     const user = useContext(UserContext)
     const formRef = useRef<null | HTMLFormElement>(null);
     const [showModal, setShowModal] = useState(false);
     const [showSidebar, setShowSidebar] = useState(false);
     const [disabled, setDisabled] = useState(true);
+    const [feedback, setfeedback] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -134,20 +145,29 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
                 password
             }
 
+            console.log(process.env.REACT_APP_SERVER_URI)
+
             let res = await axios({
-                url: `http://localhost:8000/users/login`,
+                url: `${process.env.REACT_APP_SERVER_URI}/users/login`,
                 method: "POST",
-                data: data
+                data: data,
+                headers: {
+                    "Access-Control-Allow-Origin": "*"
+                }
             })
 
             if (res.status === 200) {
                 console.log("Login Successfully")
                 console.log("Response : ", res)
-		setToken(res.data)
+		        		setToken(res.data)
+								navigate("/dashboard")
             }
 
-            console.log("Something Went Wrong !")
+            if(res.status === 204) {
+                setfeedback("Not registered yet !")
+            }
         } catch (e) {
+            setfeedback("Something went wrong !")
             console.error("Error Occured while sending the user Info : ", e)
         }
     }
@@ -180,6 +200,7 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
                     <Container>
                         <Form ref={formRef} onSubmit={handleSubmit}>
                             <Heading>Welcome Back</Heading>
+                            <Feedback>{feedback}</Feedback>
                             <FormGroup>
                                 <MyInput
                                     id="email"
