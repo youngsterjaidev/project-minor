@@ -159,11 +159,11 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
             if (res.status === 200) {
                 console.log("Login Successfully")
                 console.log("Response : ", res)
-		        		setToken(res.data)
-								navigate("/dashboard")
+                setToken(res.data)
+                navigate("/dashboard")
             }
 
-            if(res.status === 204) {
+            if (res.status === 204) {
                 setfeedback("Not registered yet !")
             }
         } catch (e) {
