@@ -117,7 +117,7 @@ export class SignUp extends React.Component<Props> {
 
       if (res.status === 200) {
         console.log(res.data)
-				navigate("/dashboard")
+        navigate("/dashboard")
       }
 
       console.log("Something went wrong !")
