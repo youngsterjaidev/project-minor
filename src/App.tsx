@@ -22,6 +22,8 @@ interface Props {
     useDarkTheme: any;
     setUseDarkTheme: any;
     setToken: any;
+		showSidebar: any;
+		setShowSidebar: any;
 }
 
 const Container = styled.div`
@@ -101,12 +103,20 @@ const Feedback = styled.div`
   text-align: center;
   color: #ff0000;
 `
+const ForgotPassword = styled.div`
+    color: ${props => props.theme.textColorOnPrimary};
+`
 
-export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) {
+export default function App({ 
+		setUseDarkTheme, 
+		useDarkTheme, 
+		setToken,
+		showSidebar,
+		setShowSidebar
+		}: Props) {
     const user = useContext(UserContext)
     const formRef = useRef<null | HTMLFormElement>(null);
     const [showModal, setShowModal] = useState(false);
-    const [showSidebar, setShowSidebar] = useState(false);
     const [disabled, setDisabled] = useState(true);
     const [feedback, setfeedback] = useState("");
     const [email, setEmail] = useState("");
@@ -137,6 +147,7 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
     async function handleSubmit(e) {
         // Preveent from page loading
         e.preventDefault()
+				setDisabled(true)
 
         try {
 
@@ -165,10 +176,12 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
 
             if (res.status === 204) {
                 setfeedback("Not registered yet !")
+								setDisabled(false)
             }
         } catch (e) {
             setfeedback("Something went wrong !")
             console.error("Error Occured while sending the user Info : ", e)
+						setDisabled(false)
         }
     }
 
@@ -189,7 +202,11 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
                     setShowSidebar={setShowSidebar}
                 >
                     <div>
-                        <MyTab to="">Login</MyTab>
+											<MyTab to="" onClick={() => {
+													setShowModal(!showModal)
+													setShowSidebar(!showSidebar)
+												}}
+												>Login</MyTab>
                         <MyTab to="/result">Help</MyTab>
                         <MyTab to="" onClick={() => setUseDarkTheme(!useDarkTheme)}>Change Theme</MyTab>
                     </div>
@@ -225,7 +242,7 @@ export default function App({ setUseDarkTheme, useDarkTheme, setToken }: Props) 
                                 <MyButton disabled={disabled} type="submit">
                                     Login
                                 </MyButton>
-                                <div>Forgot Password</div>
+                                <ForgotPassword>Forgot Password</ForgotPassword>
                             </ButtonGroup>
                         </Form>
                     </Container>

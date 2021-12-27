@@ -89,7 +89,7 @@ export const HomeNav: FC<Prop> = ({
     useDarkTheme,
     setUseDarkTheme
 }) => {
-    const user = useContext(UserContext);
+    const [user, setUser] = useContext(UserContext);
     const [shadow, setShadow] = useState(false);
 
     function handleScroll(e) {
@@ -119,7 +119,7 @@ export const HomeNav: FC<Prop> = ({
                     to={user ? "/dashboard" : ""}
                     onClick={() => setShowModal(true)}
                 >
-                    {user ? "Account" : "Sign In"}
+									{user ? "Account" : "Sign In"}
                 </NavTab>
                 <Hamburger onClick={() => setShowSidebar(true)}>
                     <svg

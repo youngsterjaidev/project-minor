@@ -19,15 +19,18 @@ console.log(process.env.REACT_APP_BASE_URL)
 const Main = () => {
     const [useDarkTheme, setUseDarkTheme] = useState(false);
     const [token, setToken] = useToken();
+    const [showSidebar, setShowSidebar] = useState(false);
 
     return (
         <ThemeProvider theme={useDarkTheme ? darkTheme : defaultTheme}>
-            <UserContext.Provider value={token}>
+            <UserContext.Provider value={[token, setToken]}>
                 <Router>
                     <App
                         useDarkTheme={useDarkTheme}
                         setUseDarkTheme={setUseDarkTheme}
                         setToken={setToken}
+												showSidebar={showSidebar}
+												setShowSidebar={setShowSidebar}
                         path="/"
                     />
                     <SignUp
@@ -38,16 +41,22 @@ const Main = () => {
                     <Dashboard
                         useDarkTheme={useDarkTheme}
                         setUseDarkTheme={setUseDarkTheme}
+												showSidebar={showSidebar}
+												setShowSidebar={setShowSidebar}
                         path="/dashboard"
                     />
                     <Result
                         useDarkTheme={useDarkTheme}
                         setUseDarkTheme={setUseDarkTheme}
+												showSidebar={showSidebar}
+												setShowSidebar={setShowSidebar}
                         path="/result/:search"
                     />
                     <Shop
                         useDarkTheme={useDarkTheme}
                         setUseDarkTheme={setUseDarkTheme}
+												showSidebar={showSidebar}
+												setShowSidebar={setShowSidebar}
                         path="result/shop/:shop"
                     />
                 </Router>

@@ -36,7 +36,7 @@ const FormContainer = styled.div`
   flex: 1;
 `;
 
-const Form = styled.div`
+const Form = styled.form`
   width: 100%;
 `;
 
@@ -108,6 +108,8 @@ export class SignUp extends React.Component<Props> {
     // prevent from page loading
     e.preventDefault()
 
+		console.log("state ", this.state)
+
     try {
       let res = await axios({
         method: "POST",
@@ -136,7 +138,7 @@ export class SignUp extends React.Component<Props> {
           <div>
             <Heading>Join us</Heading>
             <SubHeading>Create An Account !</SubHeading>
-            <Form>
+            <Form onSubmit={this.handleSubmit}>
               <FormGroup>
                 <MyInput
                   placeholder="username"
@@ -176,15 +178,17 @@ export class SignUp extends React.Component<Props> {
                 <MyInput
                   onChange={this.handleChange}
                   placeholder="confirmPassword"
+									name="confirmPassword"
                   value={this.state.confirmPassword}
                   type="text"
                 />
               </FormGroup>
-            </Form>
-            <FormGroup>
-              <MyButton>Create An Account !</MyButton>
+							<FormGroup>
+              <MyButton type="submit">Create An Account !</MyButton>
               <MyLink to="/">Home</MyLink>
             </FormGroup>
+            </Form>
+            
           </div>
         </FormContainer>
       </Container>

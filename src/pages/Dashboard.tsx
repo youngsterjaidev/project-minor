@@ -9,6 +9,8 @@ interface Props {
     path?: string;
     useDarkTheme: any;
     setUseDarkTheme: any;
+		showSidebar: any;
+		setShowSidebar: any;
 }
 
 interface Result {
@@ -123,7 +125,12 @@ let dResult = [
     }
 ]
 
-export const Dashboard: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
+export const Dashboard: React.FC<Props> = ({ 
+			useDarkTheme, 
+			setUseDarkTheme,
+			showSidebar,
+			setShowSidebar
+		}) => {
     const user = useContext(UserContext);
     const [result, setResult] = useState<Result[]>([]);
 
@@ -161,7 +168,12 @@ export const Dashboard: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) =>
                 <Load />
             ) : (
                 <Container>
-                    <Nav useDarkTheme={useDarkTheme} setUseDarkTheme={setUseDarkTheme} />
+                    <Nav 
+											useDarkTheme={useDarkTheme} 
+											setUseDarkTheme={setUseDarkTheme} 
+											showSidebar={showSidebar}
+											setShowSidebar={setShowSidebar}
+									/>
                     <Wrapper>
                         <Sidebar>
                             <SidebarTabs>Your appointment</SidebarTabs>

@@ -15,6 +15,8 @@ interface Props {
     search?: string;
     useDarkTheme: any;
     setUseDarkTheme: any;
+		showSidebar: any;
+		setShowSidebar: any;
 }
 
 const Container = styled.div`
@@ -37,20 +39,31 @@ const Wrapper = styled.div`
     padding: 0em 1em;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+		grid-auto-rows: minmax(350px, max-content);
 `;
 
 const Main = styled.div`
     display: grid;
-    grid-template-columns: minmax(150px, 1fr) 2fr;
+    grid-template-columns: minmax(150px, 1fr) 2.5fr;
+
+		@media (max-width: 550px) {
+			display: block;
+		}
 `;
 
 const FilterContainer = styled.form`
     padding: 0.8em 0.5em 0em 0.5em;
 `;
 
+const FilterWrapper = styled.div`
+		min-height: max-content;
+		max-height: 65vh;
+		overflow-y: scroll;
+`
+
 const FilterCard = styled.fieldset`
     background: ${(props) => props.theme.color};
-    padding: 2rem 1rem;
+    padding: 1rem;
     border-radius: 8px;
     margin-bottom: 2rem;
     border: none;
@@ -70,6 +83,10 @@ const Row = styled.div`
     display: inline-flex;
     padding: 1em;
     width: 100%;
+
+		&:hover {
+			background: ${props => props.theme.backgroundColor};
+		}
 `;
 
 const RowDesc = styled.label`
@@ -232,11 +249,14 @@ export const Result: React.FC<Props> = (props) => {
                     <Nav
                         useDarkTheme={props.useDarkTheme}
                         setUseDarkTheme={props.setUseDarkTheme}
+												showSidebar={props.showSidebar}
+												setShowSidebar={props.setShowSidebar}
                     />
                     <Main>
                         <FilterContainer>
                             <FilterCard>
                                 <Legend>Species</Legend>
+																<FilterWrapper>
                                 <Row>
                                     <input type="checkbox" id="name" />
                                     <RowDesc htmlFor="name">
@@ -250,6 +270,7 @@ export const Result: React.FC<Props> = (props) => {
                                 {species.map(item => {
                                     return <Filter idName={item} label={item.alias} />
                                 })}
+																	</FilterWrapper>
                             </FilterCard>
                             <FilterCard>
                                 <Legend>Timing</Legend>

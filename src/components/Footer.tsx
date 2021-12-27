@@ -17,6 +17,10 @@ const Cotnainer = styled.div`
 const Header = styled.div`
   width: 20%;
   color: ${props => props.theme.textColor};
+
+	@media (max-width: 550px) {
+		width: 100%;
+	}
 `;
 
 const Heading = styled.h5`

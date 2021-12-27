@@ -2,23 +2,34 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Nav, Load, Footer, Modal } from "../components";
 import {HiOutlineCheck,HiOutlineX   } from "react-icons/hi"
+import { Illustrations } from "../assets"
+import {
+	Button
+} from "../components"
+
+import { shopData } from "../data"
+
+console.log(shopData)
 
 interface Prop {
     path: string;
     useDarkTheme: any;
     setUseDarkTheme: any;
+		showSidebar: any;
+		setShowSidebar: any;
 }
 
 const Container = styled.div`
     width: 100%;
     min-height: 100vh;
     background: ${(props) => props.theme.backgroundColor};
+
 `;
 
 const ImageContainer = styled.div`
-    height: 80vh;
-    background: red;
 `
+
+const Image = styled.img``
 
 const ShopName = styled.h2`
     text-align: center;
@@ -37,9 +48,10 @@ const TimingCard = styled.div`
     color: ${props => props.theme.textColor};
 `
 
-export const Shop: React.FC<Prop> = ({ useDarkTheme, setUseDarkTheme }) => {
+export const Shop: React.FC<Prop> = ({ showSidebar, setShowSidebar, useDarkTheme, setUseDarkTheme }) => {
     const [ready, setReady] = useState<null | boolean>(null);
     const [showModal, setShowModal] = useState(false)
+		const [data, setData] = useState(shopData)
 
     useEffect(() => {
         // call the server
@@ -57,12 +69,15 @@ export const Shop: React.FC<Prop> = ({ useDarkTheme, setUseDarkTheme }) => {
                 <>
                     {ready === true ? (
                         <Container>
-                            <Nav useDarkTheme={useDarkTheme} setUseDarkTheme={setUseDarkTheme} />
-                            <ImageContainer>Images</ImageContainer>
-                            <ShopName>Shop Name</ShopName>
-                            <Description>Shop Descriptions</Description>
+                            <Nav showSidebar={showSidebar} setShowSidebar={setShowSidebar} useDarkTheme={useDarkTheme} setUseDarkTheme={setUseDarkTheme} />
+			
+                            <ImageContainer>
+															<Image src="https://images.unsplash.com/photo-1516453734593-8d198ae84bcf?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxzZWFyY2h8MXx8cGV0JTIwc2hvcHxlbnwwfHwwfHw%3D&auto=format&fit=crop&w=500&q=60" />
+														</ImageContainer>
+                            <ShopName>{data[0].title}</ShopName>
+                            <Description>{data[0].description}</Description>
                             <div>
-                                <button type="button" onClick={() => setShowModal(true)}>Set Appointment</button>
+                                <Button type="button" onClick={() => setShowModal(true)}>Set Appointment</Button>
                             </div>
                             {showModal ? (
                             <Modal showModal={showModal} setShowModal={setShowModal}>

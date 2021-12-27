@@ -1,19 +1,25 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import { WiMoonAltFirstQuarter } from "react-icons/wi";
 import { AiOutlineUser, AiOutlineLogout } from "react-icons/ai";
 import { typeScale } from "../utils";
 import { Link, navigate } from "@reach/router";
-
+import UserContext from "../UserContext"
 import { IoIosArrowBack } from "react-icons/io";
 
 import { Input } from "./Elements";
+
+import { 
+	Sidebar
+} from "../components"
 
 console.log(Input);
 
 interface Props {
     useDarkTheme: any;
     setUseDarkTheme: any;
+		showSidebar: any;
+		setShowSidebar: any;
 }
 
 interface ContainerProp {
@@ -47,20 +53,44 @@ const NavTabs = styled.div`
     align-items: cetner;
 `;
 
+const MyTab = styled(Link)`
+  font-style: normal;
+  padding: 0.2em 1.5em;
+  font-weight: bold;
+  font-size: ${() => typeScale.paragraph};
+  line-height: 28px;
+  color: ${(props) => props.theme.textColor};
+  cursor: pointer;
+  text-decoration: none;
+  text-align: center;
+  display: block;
+
+  &:hover {
+    background-color: ${(props) => props.theme.primaryColor};
+    color: ${props => props.theme.textColorOnPrimary};
+    border-radius: 3em;
+    box-shadow: 0px 0px 44px 0px ${(props) => props.theme.boxShadow};
+  }
+
+`;
+
 const InputWrapper = styled.div`
     width: 100%;
     height: auto;
     position: relative;
     display: grid;
+		padding: 0.2em 1em;
     place-items: center;
 `;
 
 const SearchInput = styled(Input)`
     min-width: 400px;
+		/*width: 100%;*/
     padding: 0.5em 2em;
 
     @media (max-width: 500px) {
         min-width: auto;
+				width: 100%;
     }
 `;
 
@@ -146,7 +176,13 @@ const BackBtn = styled(IoIosArrowBack)`
     color: ${(props) => props.theme.textColor};
 `;
 
-export const Nav: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
+export const Nav: React.FC<Props> = ({ 
+			useDarkTheme, 
+			setUseDarkTheme,
+			showSidebar,
+			setShowSidebar
+		}) => {
+		const [user, setUser]  = useContext(UserContext)
     const [shadow, setShadow] = useState(false);
 
     function handleScroll(e) {
@@ -159,7 +195,8 @@ export const Nav: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
 
 		function logout() {
 			console.info("logout")
-			localStorage.clear()
+			console.log(user, setUser)
+			setUser()
 			navigate("/")
 		}
 
@@ -171,8 +208,20 @@ export const Nav: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
 
 		return (
         <Container shadow={shadow}>
+						{showSidebar ? (
+                <Sidebar
+                    showSidebar={showSidebar}
+                    setShowSidebar={setShowSidebar}
+                >
+                    <div>
+                        <MyTab to="">Login</MyTab>
+                        <MyTab to="/result">Help</MyTab>
+                        <MyTab to="" onClick={() => setUseDarkTheme(!useDarkTheme)}>Change Theme</MyTab>
+                    </div>
+                </Sidebar>
+            ) : null}
             <LogoTabs
-                to=""
+                to="/"
                 onClick={() => {
                     window.history.back();
                 }}
@@ -193,17 +242,24 @@ export const Nav: React.FC<Props> = ({ useDarkTheme, setUseDarkTheme }) => {
             </InputWrapper>
             <NavTabs>
                 <NavTab to="" onClick={() => setUseDarkTheme(!useDarkTheme)}>
-                    <WiMoonAltFirstQuarter size="1.8em" />
+                    <WiMoonAltFirstQuarter size="1.6em" />
                 </NavTab>
                 <NavTab to="">
-                    <AiOutlineUser size="1.8em" />
+                    <AiOutlineUser size="1.6em" />
                 </NavTab>
 								<LogoutTab
 									onClick={logout}
 								>
-                    <AiOutlineLogout size="1.8em" />
+                    <AiOutlineLogout size="1.6em" />
                 </LogoutTab>
-                <Hamburger>
+                <Hamburger
+									onClick={
+										() => {
+											console.log("show Sidebar", setShowSidebar)
+											setShowSidebar(!showSidebar)
+										}
+									}
+								>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         x="0px"

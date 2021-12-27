@@ -82,8 +82,11 @@ const Result = styled.div`
   box-shadow: 0px 0px 19px 3px ${(props) => props.theme.boxShadow};
 `;
 
-const ResultPill = styled.div`
+const ResultPill = styled(Link)`
   padding: 1em;
+	display: block;
+	color: ${(props) => props.theme.backgroundColor};
+	text-decoration: none;
 `;
 
 const PillWrapper = styled.div`
@@ -107,15 +110,41 @@ const Pill = styled(Link)`
   }
 `;
 
+const dummyData = [
+	{
+		id: 0,
+		type: "Cat",
+		shopName: "Red Purple Sanjoli"
+	},
+	{
+		id: 1,
+		type: "Cat",
+		shopName: "Diamond Chota Shimla"
+	},
+	{
+		id: 2,
+		type: "Cat",
+		shopName: "Black Panther"
+	},
+	{
+		id: 3,
+		type: "Mouse"
+	},
+	{
+		id: 4,
+		type: "Snake"
+	}
+]
+
 export const HeadingContainer = () => {
   const [search, setSearch] = useState<string>("");
-  const [data, setData] = useState([]);
+	const [data, setData] = useState<any>([]);
 
   async function findResult(e) {
     setSearch(e.target.value);
 
       // @ts-ignore
-    setData([`${Math.random()}`, `${Math.random()}`, `${Math.random()}`]);
+    //setData([`${Math.random()}`, `${Math.random()}`, `${Math.random()}`]);
 
     // try {
     //   let res = await axios.get(`/find/${e.target.value}`)
@@ -123,6 +152,20 @@ export const HeadingContainer = () => {
     // } catch (e) {
     //   console.error("Error Occured : ", e)
     // }
+		
+
+		const filter = dummyData.filter(item => {
+			return item.type === e.target.value
+			/*if(item.type === e.target.value) {
+				return true
+			} else {
+				return false
+			}*/
+		})
+
+		console.log(filter)
+
+		setData(filter)
   }
 
   return (
@@ -144,8 +187,8 @@ export const HeadingContainer = () => {
             <Result>
               {data.map((item) => {
                 return (
-                  <ResultPill>
-                    <div>{item}</div>
+                  <ResultPill to="">
+                    <div>{item.shopName}</div>
                   </ResultPill>
                 );
               })}
